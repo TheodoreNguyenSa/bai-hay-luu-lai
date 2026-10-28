@@ -1,0 +1,165 @@
+# Bài hay Toản lưu lại — side chat 27/10/2026
+
+Mục đích: Toản post bài hay vào đây để lưu thông tin, cứ từ từ, không cần vội cài / thử ngay. Bột chỉ ghi tóm tắt đã kiểm chứng + link gốc, giữ lại caveat quan trọng.
+
+## 1. ARTEMIS — Google, AI agent điều khiển điện thoại Android (27/10/2026)
+- Repo: https://github.com/google/artemis
+- Apache 2.0, public từ 13/08/2026, Python.
+- Sao: 12.338 sao (18/10/2026), sau đó ghi nhận ~14.860 sao.
+- Làm được: mở app, bấm, gõ, kiểm tra kết quả, chuyển app, lấy screenshot + logcat. Chạy qua web / CLI / Python / MCP (Claude Code, Codex, Antigravity, Cursor).
+- Tốc độ Flash: 3–5 giây/bước (theo Google).
+- Benchmark AndroidWorld 99%+: **tự Google báo cáo, chưa có bên độc lập kiểm chứng**. Benchmark là 100+ tác vụ có kịch bản trên 20+ app, môi trường test kiểm soát.
+- Cần: máy Android bật USB debugging hoặc emulator, Python 3.12+, API key model đa phương thức (trả tiền riêng).
+- Caveat: Minitap (mobile-use) từng tố một phần code lấy từ họ không ghi nguồn, README tới 12/09 mới ghi nhận.
+- Liên quan Toản: có thể dùng để test app Android TV, nhưng ARTEMIS thiết kế cho điện thoại cảm ứng, TV dùng DPAD nên chưa chắc ăn khớp 100%.
+
+## 2. Browsentic — AI dùng luôn trình duyệt thật đã đăng nhập (27/10/2026)
+- Repo: https://github.com/imshaikot/browsentic
+- Apache 2.0, tạo 24/07/2026. Chỉ **165 sao, 23 fork** lúc kiểm chứng — project còn rất non.
+- Ý tưởng: extension + Bridge local điều khiển Chrome / Edge / Brave / Arc / Firefox thật, dùng luôn session đã login Gmail, Facebook, dashboard. Chạy bằng agent CLI đã có (Claude Code, Codex, Antigravity...), không cần API key riêng.
+- 52 page tool (đúng 50+): điều hướng, đọc file, upload/download, giọng nói, chỉ tay vào màn hình, ghi chú "solves captchas" trong README — chưa kiểm chứng được cách giải / tỉ lệ.
+- MCP chỉ là endpoint tùy chọn, không phải bản chất chính. Cái chính là side panel.
+- Local first / no telemetry theo README, bind 127.0.0.1, hỏi duyệt trước khi submit/upload/rời site. Nhưng nội dung trang vẫn gửi lên nhà cung cấp model (Claude/Codex) như bình thường.
+- So với Playwright: Playwright mặc định profile trắng nhưng có thể dùng profile persistent để giữ login; Playwright MCP cũng có extension chạm tab thật. Browsentic hợp để vibe coding / test nhanh trên site đã login, không thay Playwright chạy E2E trên CI.
+- Rủi ro: extension + Bridge có quyền rất lớn trên trình duyệt đã login, lại cài bằng `curl | sh`. Chỉ nên thử trên Chrome profile phụ / máy test, block site ngân hàng, email chính trước.
+
+## 3. Maximizing Value from Claude Code — video on-demand của Anthropic (27/10/2026)
+- Link: https://anthropic.ondemand.goldcast.io/on-demand/5ca27c0b-2eab-45d5-bded-b18e6a2f0d7c
+- Đăng 10/09/2026, dài 1644 giây (~27 phút).
+- Nội dung theo các chương: Introduction & Overview, Understanding Tokens, Understanding Request Structure, Token Types Explained, Token Pricing Models, Cache Optimization, Model Selection Strategy, Context Optimization, Optimizing Token Usage, Effort Configuration, Token Management Strategies, Cache Management Strategies, Sub Agents, Admin Management Settings, Recap and Closing.
+- Liên quan Toản: Toản đang dùng Claude / Claude Code (kể cả setup remote control nhiều project), nên phần token / cache / chọn model / tối ưu context trong video này trực tiếp liên quan tới chi phí và hiệu quả dùng Claude Code của Toản. Chưa xem nội dung chi tiết bên trong video — mới lưu link + mục lục để xem sau.
+
+## 4. Chorus — gom Claude Code, Codex, Antigravity vào một cửa sổ (27/10/2026)
+- Link: https://chorus-cli.web.app/
+- Tác giả: Luu Huong Tech / Châu Võ Lưu Hương (npm `@chauvoluuhuong/chorus`, QR VietQR trên trang ghi CHAU VO LUU HUONG).
+- Ý tưởng: chạy trực tiếp CLI gốc `claude`, `codex`, `agy` trong một cửa sổ, không phải bản sao — giữ slash command, plugin, MCP, CLAUDE.md / AGENTS.md, login + plan riêng của từng CLI.
+- Bộ nhớ chung: mọi chat được ghi lại, các agent đọc qua Chorus MCP server; handoff 1 click — ví dụ trong bài: Claude lên kế hoạch cho Luu Huong Tech rồi chuyển sang Codex, Codex đọc lại ngữ cảnh và tiếp tục. Chat lưu trong 1 file trên máy, tìm được xuyên project.
+- Gom approvals về 1 inbox; 1 thư viện skill chung, link vào mọi agent (bài đăng nói bật/tắt skill trong thư viện chung — trang chủ chỉ ghi "One skill library, linked into every agent", chưa kiểm chứng chi tiết nút bật/tắt).
+- Doctor: màn hình kiểm tra khi mở lần đầu, xem phiên bản + chi tiết các mục kiểm tra của các CLI — có nhắc trong `install.sh` ("the doctor screen").
+- Cài đặt: `curl -fsSL https://chorus-cli.web.app/install.sh | bash` — bản kiểm chứng lúc lưu là **v1.0.11**; script có kiểm SHA256 của gói tải về, mang sẵn Node.js + node-pty nên không cần cài Node/npm/sudo/compiler trước.
+- Nền tảng: **macOS Apple silicon (M1 trở lên, Intel chưa hỗ trợ) + Linux x86_64/arm64 glibc (cần WebKitGTK 4.1 cho cửa sổ desktop, thiếu thì mở trong trình duyệt); Windows chỉ qua WSL, không có bản Windows native.** Trang chủ viết gọn "Needs a Mac…" nhưng `install.sh` xác nhận cả Linux.
+- Miễn phí / mã nguồn mở: bài đăng nói miễn phí + open source; mô tả trang ghi "open-source app for macOS and Linux" — **nhưng trên trang chủ lúc kiểm chứng không thấy link repo GitHub**, nên chưa xác minh được repo/license. Đừng nhầm với 3 project khác cùng tên Chorus: `askchorus/chorus` (app Mac gom ChatGPT/Claude/Gemini), `valpere/chorus` (plugin review chéo giữa các CLI), `z-Zihan/Chorus` (workspace agent-to-agent).
+- Caveat: Chorus miễn phí không có nghĩa dùng miễn phí — vẫn cần đăng nhập + gói riêng của Claude Code / Codex / Antigravity. Cài bằng `curl | bash` như mọi tool dạng này: chỉ nên thử trên máy test / WSL trước.
+- Liên quan Toản: đúng nỗi đau Toản nêu 22/10 — muốn quản lý nhiều project / nhiều agent kiểu hợp nhất như Antigravity, đang có script PowerShell remote control Claude Code. Nhưng máy nhà Toản là Windows 11 nên Chorus chỉ chạy qua WSL, không native — cần cân nhắc trước khi thử.
+
+## 5. TOP dự án AI mã nguồn mở tăng sao nhanh nhất — GoodAIList của Chip Huyen (27/10/2026)
+- Nguồn: bảng GoodAIList của Chip Huyen, cập nhật hàng ngày, ~15.000 repo (ghi nhận tháng 02/2026). Bài gốc nói link ở comment nhưng Toản không gửi kèm link — Bột kiểm chứng từng repo bằng tên repo.
+- Xu hướng chung: skill cho coding agent chiếm gần nửa bảng. Tháng 09/2026, trong top 100: AI Agent là nhóm lớn nhất 16 repo, AI Skills và AI Coding Assistant mỗi nhóm 12 repo.
+
+### 5.1 morluto/rea — Reverse Engineer Anything
+- Repo: https://github.com/morluto/rea
+- Tăng sao: 41 sao (02/10/2026) → ~335.700 sao (19/10) → ~365.000 sao (24/10); bảng khác ghi 388k sao, +58k/7 ngày (~8.300/ngày). Con số +7.280 sao/ngày trong bài là hợp lý cho một ngày cụ thể, không phải tốc độ cố định.
+- Làm gì: MCP server + CLI cho coding agent dùng các tool reverse engineering sẵn có (Ghidra, IDA Pro, Hopper, JADX cho Android, Binwalk/Unblob cho firmware...), trả về pseudocode, module graph, execution trace kèm evidence và giới hạn.
+- **Sửa lại mô tả trong bài:** REA KHÔNG khôi phục mã nguồn gốc, KHÔNG clone nguyên app của người khác. README tự ghi chỉ dùng cho nghiên cứu hợp pháp, giáo dục, tương thích, phân tích phần mềm mình sở hữu; bypass license restriction là không được phép.
+
+### 5.2 Gathin23/cleanyourtv — dọn TV
+- Repo: https://github.com/Gathin23/cleanyourtv
+- Tăng sao: ~39,2k sao, +4.192/ngày (Trendar 27/10/2026); 30.900 sao ngày 24/10.
+- Làm gì: debloat Android TV / Google TV qua Wi-Fi bằng ADB, không root, chỉ `pm disable-user` (không uninstall, khôi phục được bằng restore script), kèm launcher nhẹ kiểu Apple TV.
+- Liên quan Toản: **Toản đã làm xong từ 22/10** trên box Vodafone TV Technicolor UIW4030VHA — launcher `com.gathin.tvhome` là Home mặc định, 15 package đã disable, không trúng PROTECTED (tuner FTA, Cast, voice search). Sau đó Toản đã fork làm Launcher v2.6-toan3 riêng. Không cần làm lại.
+
+### 5.3 Zagitta/gpu-unlock — mở khóa FP/BF16 cho Nvidia dòng 3000
+- Repo: https://github.com/Zagitta/gpu-unlock
+- Tăng sao: ~9,7k sao, +3.034/ngày (Trendar 27/10/2026).
+- Làm gì: Linux kernel module, chạy trước khi driver Nvidia bind (qua initramfs), ghi 2 speed selector để mở tốc độ issue FP/BF16 FMA lên mức card chuyên nghiệp, cho chip GA102/GA103/GA104/GA106 (3060 12GB → 3090 Ti). Không cần flash vBIOS, không patch driver, không phải patch lại mỗi lần driver update.
+- Số liệu **tự project báo cáo, chưa kiểm chứng độc lập**: 3090 Ti BF16 87,5 → 157,41 TFLOPS (+80%), FP16 87,46 → 118,39 TFLOPS (+35%), TF32 42,58 → 82,61 TFLOPS (+94%). GEMM +25% đến +81% tùy card/cấu hình nguồn.
+- Liên quan Toản: **không áp dụng cho máy nhà Toản** — máy "toannx" là AMD Ryzen 5 7430U, GPU tích hợp AMD, không có GPU Nvidia, lại chạy Windows 11 (tool này chỉ Linux, dạng kernel module).
+
+### 5.4 debpalash/VoiceStudio — thay ElevenLabs, chạy local, clone giọng
+- Repo: https://github.com/debpalash/VoiceStudio
+- Tăng sao: dẫn đầu tháng 09/2026 với +37.780 sao; 57.088 sao ngày 11/10, +14.689 sao trong tuần 06/10; bảng khác ghi ~88k sao sau đó.
+- Làm gì: app desktop Electron + Python backend, clone giọng, design giọng, lồng tiếng video, dictation, transcription, audiobook, 646 ngôn ngữ (con số từ OmniVoice). Engine mặc định k2-fsa/OmniVoice, có local API + MCP cho agent.
+- Caveat quan trọng: app AGPL-3.0, nhưng **model OmniVoice mặc định chỉ dùng phi thương mại** — làm quảng cáo / video cho khách thì phải đổi engine khác hoặc trả phí dịch vụ thương mại. Chất lượng không đều ở ngôn ngữ ít tài nguyên.
+- Liên quan Toản: Toản đã có VieNeu-TTS / CIT Voice Studio cho thuyết minh tiếng Việt. Máy nhà không có GPU Nvidia, chạy CPU thì VoiceStudio sẽ chậm, phải dùng engine nhẹ (KittenTTS, Supertonic-3, PocketTTS) và cần ~10 GB trống. Clone giọng chỉ dùng giọng của mình / có sự đồng ý.
+
+### 5.5 Nutlope/hallmark — skill chống "AI slop" khi thiết kế
+- Repo: https://github.com/Nutlope/hallmark
+- Sao: 32.133 sao (25/10/2026), MIT, làm bởi Together AI.
+- Làm gì: skill cho Claude Code, Codex, Cursor, OpenCode — chọn theme từ catalog (48 theme ở bản mới), chạy linter trong trình duyệt thật để soi các dấu hiệu "nhìn là biết AI làm" (eyebrow trên mọi heading, 1 từ tô màu trong headline, hero lệch màn hình, form cảm ơn mà không gửi...), rồi reviewer ở context mới chốt lần cuối.
+- Caveat: số theme / số gate thay đổi theo phiên bản (bản cũ ghi 22 theme / 65 gate, bản mới 48 theme), đừng coi số trong bài là cố định. Hiệu quả chỉ đo bằng harness nội bộ của repo, chưa có kiểm chứng chéo độc lập.
+- Cài: `npx skills add nutlope/hallmark -g`
+
+### 5.6 cloudflare/security-audit-skill — audit bảo mật nhiều giai đoạn
+- Repo: https://github.com/cloudflare/security-audit-skill
+- Sao: 43.428 sao (24/10/2026), 2.712 fork, MIT, tạo 18/06/2026.
+- Làm gì: skill biến coding agent thành auditor, chạy 6 phase, có adversarial validation — agent kiểm tra finding không phải agent tìm ra finding đó. Bao phủ web/auth, client, cloud/deploy, supply chain/CI, RPC/messaging, data isolation, native/mobile, và cả AI/LLM (prompt injection, agent tools).
+- Caveat: các số 20.799 candidate → 7.245 kết quả dùng được, tỉ lệ loại bỏ giảm 40% → 11% là đo trên **harness nội bộ của Cloudflare với 128 repo của họ, không phải trên skill public**, chưa bên thứ ba nào replicate, và không có tỉ lệ false negative. Chạy trên code không tin cậy thì phải có OS sandbox, không có mạng ngoài. Một lần chạy chỉ tìm được khoảng một nửa so với chạy lặp lại (theo Cloudflare).
+
+### 5.7 AgriciDaniel/claude-seo — 26 skill SEO + 19 sub-agent
+- Repo: https://github.com/AgriciDaniel/claude-seo
+- Sao: >20.000 sao, 21.400 sao (26/10/2026), MIT.
+- Làm gì: plugin Claude Code, 26 sub-skill + 19 sub-agent, 34 command — audit SEO kỹ thuật, E-E-A-T, schema, GEO/AEO, local SEO, backlink, keyword cluster, llms.txt, WebMCP. Audit đầy đủ mất 10–15 phút theo README.
+- Caveat: số liệu hiệu quả (ví dụ site tác giả 10,8k click Search Console trong 12 tuần đầu) là **tự tác giả báo cáo**. Audit đầy đủ tốn nhiều token Claude Code. Cần Claude Code 1.0.33+ và Python 3.11–3.14, không cần API key (Google API là tùy chọn).
+
+## 6. Tongyi-MAI/OpenGCUA — stack mở cho computer-use agent (27/10/2026)
+- Ghi chú của Toản khi gửi: "Hoàng Nam Ca github Tongyi-Mai/OpenGCUA" — Bột chưa tìm thấy liên hệ giữa tên Hoàng Nam Ca và repo này trong kết quả tìm kiếm; repo là của Alibaba Tongyi-MAI. Có thể Hoàng Nam Ca là người chia sẻ bài, chưa xác minh được vai trò.
+- Repo: https://github.com/Tongyi-MAI/OpenGCUA
+- Paper: https://arxiv.org/abs/2610.22200 — "OpenGCUA: Toward a Fully Open Stack for Generalist Computer Use"
+- Lab tương tác: https://tongyi-mai.github.io/OpenGCUA
+- Apache 2.0, tạo 15/10/2026, 523 sao / 45 fork lúc kiểm chứng (bản digest 20/10 ghi 329 sao — sao đang tăng nhanh).
+- Ý tưởng: generalist computer-use agent (GCUA) — không chỉ bấm GUI theo screenshot như agent truyền thống, mà tự chọn cách quan sát và hành động: đọc accessibility tree, gọi API của app, chạy shell command, và viết code Python để gộp nhiều thao tác GUI + shell + API trong một chương trình (vòng lặp, rẽ nhánh, kết quả trung gian). GUI chỉ dùng khi cần.
+- Mở ra trong bản preview đầu: ví dụ tích hợp OSWorld, toàn bộ evaluation trajectories của 8 model frontier (GPT-6 Astra, Claude Opus 5, Gemini 3.8 Flash, GLM-5.3-Flash, Qwen3.8-Max, Qwen3.8-Flash, Kimi K3, DeepSeek-V4.1-Flash), macOS real-device harness dạng app menu-bar (bản preliminary), Cross-Device SDK (bản preliminary, 1 interface cho máy tính + trình duyệt + điện thoại).
+- Kết quả **tự Tongyi-MAI báo cáo, chưa phải leaderboard chính thức**: trên OSWorld-v2 offline, điểm trung bình 8 model tăng 45,3 → 64,9 (+19,6 điểm), số bước/task giảm 53% so với baseline GUI-only. GPT-6 Astra từ 102 → 34 bước/task. Model yếu hưởng lợi nhiều nhất: GLM-5.3-Flash +35,2 điểm, DeepSeek-V4.1-Flash +29,8 điểm; khoảng cách mạnh-yếu thu hẹp 39,1 → 18,0 điểm. Viết thao tác GUI thành code (thay vì chỉ GUI+CLI) thêm +6,1 điểm và giảm 14,8% số bước.
+- Real-device (chỉ 4 task trên macOS, mẫu rất nhỏ): Qwen3.8-Max dùng gấp 19,4 lần reasoning token so với GPT-6 Astra mà chỉ hoàn thành 3/4 task, GPT-6 Astra hoàn thành 4/4.
+- Chưa có: model GCUA riêng của họ — đang làm tiếp, cùng với cải thiện hiệu quả thực thi và môi trường đánh giá trên thiết bị thật.
+- Cần để chạy thử: macOS 14+, uv, Python 3.11–3.14, Rust/Cargo 1.89+, Xcode Command Line Tools; app macOS yêu cầu Apple Silicon / macOS 14+.
+- Liên quan Toản: đúng hướng agent dùng máy tính thật mà Toản đang theo dõi (ARTEMIS cho Android, Browsentic cho trình duyệt), nhưng OpenGCUA hiện chủ yếu chạy trên macOS, Toản dùng Windows 11 nên chưa thử trực tiếp được. SDK có adapter cho Android / Linux / trình duyệt, nhưng harness chính vẫn là Mac.
+- Cần máy mạnh không? (Toản hỏi 27/10 17:43) — Không cần GPU mạnh. Model chạy qua API cloud (config mẫu dùng Dashscope / OpenAI / Anthropic), máy local chỉ chạy harness, chụp màn hình, đọc accessibility tree, chạy code Python. Cái bắt buộc là đúng hệ: macOS 14+, Apple Silicon (cho app native), uv, Python 3.11–3.14, Rust/Cargo 1.89+, Xcode CLT. Máy nhà Toản Ryzen 5 7430U 6 nhân/12 luồng, RAM 16 GB thì đủ sức cho phần harness, nhưng kẹt ở hệ điều hành Windows, không phải kẹt ở sức mạnh. Chi phí thật là tiền API — Qwen3.8-Max dùng gấp 19,4 lần reasoning token so với GPT-6 Astra trên 4 task thật. Chỉ khi nào chạy model local thì mới cần GPU/VRAM lớn, mà model GCUA riêng của họ chưa phát hành.
+
+## 7. StykAnimate — app animation người que miễn phí, vừa open source GPL-3.0 (28/10/2026)
+- Web: https://app.stykanimate.com
+- Tải Windows/Linux: https://stykanimate.com
+- Source: https://github.com/filippocalippo/stykanimate-app
+- Repo: filippocalippo/StykAnimate-App, tạo 09/09/2026, 1.202 sao / 195 fork / 525 commit lúc kiểm chứng, GPL-3.0.
+- Là gì: app animation người que miễn phí cho Windows, Linux và trình duyệt, được mô tả là successor hiện đại của Pivot Animator. Mở được file Pivot (.piv, .stk) và Stick Nodes.
+- Tính năng chính: pose bằng IK tay/chân, figure 3D, workspace Build để tự làm figure, motion paths, onion skins, timeline Simple (kiểu Pivot) và Advanced (layers, folders, keys, easing), camera follow, particle effects (nổ, aura, beam, khói), brushes, community library, project tabs, tutorial, 27 ngôn ngữ giao diện.
+- Export: MP4 (preset YouTube / Shorts / TikTok), WebM trong suốt, GIF, APNG, PNG/JPEG/SVG frames, và xuất lại .piv/.stk để chỉnh tiếp.
+- Bản mới nhất lúc kiểm chứng: v1.2.5, ra 01/10/2026, installer Windows 127,0 MB, SHA-256 `746f4cd52145140982869cc8fd4c044364e63e74b554e251548595f4b70fc438`.
+- Giấy phép: app GPL-3.0; animation mình làm ra là của mình, kể cả video monetised / làm thuê. Nếu chia sẻ bản sửa đổi của app thì phải giữ GPL + kèm source. Fork thì phải đổi tên + icon khác, không dùng tên/logo StykAnimate.
+- Chạy local: mọi thứ decode / edit / save / render đều chạy trên máy, chỉ có diagnostics tùy chọn khi người dùng đồng ý. Bản trình duyệt chạy offline sau lần tải đầu, project ở trên máy mình.
+- Build từ source: Node.js 22+ (CI dùng 24.11) và Python 3.11+ (CI dùng 3.12); Windows và Linux được test mỗi lần thay đổi, macOS là build target chưa được test.
+- Cộng đồng: 900+ animator trên Discord, 120K+ view YouTube (số trên trang chủ).
+- Liên quan Toản — **rất sát với Qokka Giggles**: phong cách của Toản là người que màu, video 15–25s, và Toản từng chê bản v1 "trượt xà phòng" quá tĩnh, bản "What is WIFE?" bị miệng tĩnh. StykAnimate cho animation thật bằng cách pose từng frame — đúng cái Toản đang thiếu khi AI video generation bị chặn. Nhưng lưu ý: đây là làm tay từng pose, không có AI tự animate, không thấy nhắc tới lip-sync tự động hay lồng tiếng — vẫn cần ghép audio / subtitle / tiếng cười template theo workflow hiện tại của Toản. Máy nhà Toản Windows 11 chạy được bản desktop, hoặc thử nhanh bằng bản trình duyệt không cần cài.
+- **MCP / AI điều khiển được không? (Toản hỏi 28/10, đã kiểm chứng issue #6):** bản chính thức **chưa có** MCP / API / CLI — app hoàn toàn làm tay, issue #6 "Add MCP server / headless API for AI-assisted animation" (kaushik1506, mở 21/10/2026, vẫn open) xác nhận đúng điều đó. Nhưng đã có 2 bản cộng đồng: (1) **ghassenTn/stykanimate-mcp** (ra 22/10, 1 sao lúc check) — MCP server Node, đọc/sửa .styk/.piv/.stk, pose khớp, keyframe, lưu project, cài bằng `npx -y github:ghassenTn/stykanimate-mcp`, **nhưng không render / không export video**, phải mở lại app để export tay; (2) **PR #21 draft** (mashhoorahdal, mở 24/10/2026, vẫn open, chưa merge) — thêm MCP server local trong thư mục `mcp/`, tools `stykanimate_guide, build_animation, open_project, project_info, preview_frames, export_video, save_project`, chạy app headless bằng Chrome + export dialog thật, export được MP4 preset Shorts 1080×1920, đã test trên Linux Node 22 + Chrome headless + ffmpeg 6.1, **chưa test Windows/macOS**. Âm thanh: MP4 có tiếng phải export WebM rồi convert bằng ffmpeg sang H.264/AAC. Kết luận: Bột điều khiển được về nguyên tắc qua MCP, nhưng phải thử nghiệm trước, chưa phải tính năng chính thức.
+- **Thử PR #21 (28/10, PASS trên máy Bột):** Toản chọn thử, Bột đã chạy xong. Repo làm việc tại `~/workspace/styk-pr21-test/`, branch `add-video-mcp-server`, commit `5a5277f`. Smoke `hello-short.json` PASS 61s, MP4 H.264 1080×1920 24fps 97 frames 4,04s. Clip Qokka mẫu `qokka-sample-v1.mp4` (3,54s, 1,5 MB, H.264 1080×1920 24fps, **không tiếng**): người que xanh đi bộ tới người que hồng, vẫy tay, cả hai giơ tay, chữ "QOKKA!" — **SỬA: chữ này sai chính tả, thiếu chữ U, đúng phải là "QUOKKA!" / "Quokka Giggles", Toản nhắc 28/10, bản v1 này đừng dùng chữ đó**, 26 pose dùng được (walk, wave_a/b, surprised, arms_up, point, think, shrug, fall_back, lie...). File tại `~/workspace/styk-pr21-sample/` kèm preview + .styk mở lại được trong app. **Lưu ý kỹ thuật:** /tmp chỉ 512 MB nên phải dời repo sang workspace; Chrome for Testing tải bằng curl (Playwright tải đứt); **Node hệ thống v24.22.1 lỗi ERR_REQUIRE_ESM_RACE_CONDITION, phải dùng Node v24.11.0 đúng bản CI mới chạy được**; chưa có lip-sync / thoại tự động; lỗi nhỏ ở v1: bóng cam lơ lửng, chữ QOKKA! lúc zoom bị cắt mép — sửa được ở v2. Chưa test Windows nhà Toản.
+- **Clip "trượt xà phòng" Qokka (28/10, PASS, đã sửa chính tả):** `qokka-soap-slip-v1.mp4` — 6,79s, H.264 1080×1920 24fps 163 frames, 1,7 MB, **không tiếng**. Chuỗi đúng storyboard v2: nhảy múa → nhảy lên → thoa xà phòng → tuột tay ngạc nhiên → dẫm trúng xà phòng (chạm sàn y=746) → trượt té fall_back → nằm sàn → ngồi dậy chữ "OUCH!" → đứng chống nạng + chữ **"QUOKKA GIGGLES"** đầy đủ, không bị cắt (grep spec: "QUOKKA" 1 lần, "QOKKA" 0 lần; bản export đầu sai "QOKKA GIGGLES" đã bỏ, chạy lại). Hạn chế: nạng chỉ là line nâu dựng bên cạnh, nhân vật không cầm nạng, chưa có băng bó; xà phòng lúc cầm còn cách tay ~55px; dáng nhảy chân co hình thoi hơi lạ; chưa có tiếng cười kết. File tại `~/workspace/styk-pr21-sample/` kèm preview + .styk + frame cảnh té.
+
+## 8. Agency Agents — "cả công ty AI trong 1 repo" (video 27/10/2026, Nghiền AI)
+- Video gốc: https://www.facebook.com/reel/1093079783613314/ — Nghiền AI (@nghienaich), đăng 27/10/2026, 1.560 like / 22 comment lúc đọc.
+- Repo: https://github.com/msitarzewski/agency-agents — MIT, tạo 13/10/2025, **164.832 sao / 26.604 fork lúc kiểm chứng 28/10 (crawl GitHub)**, tức số sao đã vượt các bài viết cũ (154K–159K).
+- Là gì: "The Agency" — mỗi agent là 1 file Markdown (tên, mô tả, vai trò, tính cách, workflow, deliverable, success metrics), không phải prompt chung chung. Tổ chức theo division: Engineering, Design, Marketing, Sales, Product, Finance, Game Development, Security, Support, Healthcare, GIS, AR/VR Spatial Computing, Academic, Research, Strategy, Project Management, Testing, Specialized... — video nói 18 division, 230+ agent; 1 bài khác đếm được 282 agent, tức roster đang tăng, đừng coi 230 là số cố định.
+- Ví dụ trong video: Evidence Collector (QA, khẩu hiệu "Screenshots Don't Lie", đòi bằng chứng mới approve); team làm sản phẩm (Frontend Developer, Backend Architect, Growth Hacker, Reality Checker); team marketing (Content Creator, Instagram Curator, Reddit Community Builder, Analytics Reporter).
+- Cài: `./scripts/install.sh --tool claude-code` (hoặc `--division`, `--agent`, `--agents-file` để chỉ cài team cần), hỗ trợ 14+ tool: Claude Code, Cursor, Copilot, Codex, Gemini CLI, Antigravity, OpenCode, Aider, Windsurf...; hoặc app desktop agencyagents.app (macOS/Linux/Windows, tự update, cài bằng click, không cần clone/script).
+- Lưu ý: video cảnh báo agent chỉ tốt bằng model bên dưới và vẫn cần người review. Bài hướng dẫn khác khuyên: cài 7 agent hay dùng trước, đừng cài hết 200+ rồi không dùng agent nào; và OpenCode hiện chỉ đăng ký ~119 agent rồi lặng lẽ bỏ phần còn lại (lỗi upstream theo README) — nếu dùng OpenCode thì cài theo division cho dưới ngưỡng đó.
+- Liên quan Toản: rất sát workflow Claude Code / quản lý nhiều project của Toản, nhưng Toản dùng Claude + Google AI Pro, chưa rõ có dùng OpenCode không — thử thì nên bắt đầu từ 1 team nhỏ (ví dụ engineering + marketing) thay vì cài cả repo.
+
+## 9. Agent-Reach ("mắt") + Browser MCP ("tay") cho AI agent (video 27/10/2026, AI beat)
+- Video gốc: https://www.facebook.com/reel/1115648261263061/ — AI beat - Bắt nhịp công nghệ, đăng 27/10/2026, 1.164 like / 7 comment lúc đọc. Video so sánh 2 tool sau khi test tay: Agent-Reach đọc nhanh, số lượng lớn, không cần mở trình duyệt; Browser MCP linh hoạt hơn cho mọi thao tác web nhưng chậm hơn và tốn token hơn.
+- **Agent-Reach:** https://github.com/Panniantong/Agent-Reach — Python, MIT, tạo 24/02/2026, **105.504 sao / 9.356 fork lúc kiểm chứng** (khớp số 104,5K trong video, chênh do thời điểm snapshot). CLI cho agent đọc + tìm trên X, Reddit, YouTube, GitHub, Bilibili, Xiaohongshu, LinkedIn, V2EX, Xueqiu... mà không cần API trả phí; mỗi platform = danh sách tool ưu tiên + dự phòng, hỏng thì tự đổi. Chỉ đọc, không đăng/không comment/không like. Cài theo docs/install.md trên GitHub, không cài qua PyPI — **gói `agent-reach` trên PyPI không phải project này, README cảnh báo rõ**. An toàn: nền tảng cần login sẽ copy login từ Chrome của mình sang browser riêng của Agent-Reach (không đọc password, không tự login thay), README khuyên dùng tài khoản phụ vì platform có thể hạn chế tài khoản tự động truy cập.
+- **Browser MCP:** CẨN THẬN — có nhiều project cùng tên, số trong video chưa xác minh được cho 1 project cụ thể. Video nói 100.000+ user, 4,7 sao Chrome Web Store, closed-source, xử lý hoạt động của user. Nhưng kiểm chứng thấy: (a) browsermcp.dev (@agent360/browser-mcp) là open source MIT, 40 tool, trang chủ tự ghi 1.000 Chrome user + 6.052 lượt tải npm/tháng — không phải 100K; (b) browsermcp.io (@browsermcp/mcp) cũng MIT, ~7K sao GitHub, ~15 tool; (c) listing Chrome Web Store tên "Browser MCP" có rating 4,9 trong snippet tìm kiếm, không thấy user count khớp 100K. Nghĩa là hoặc video nói tới 1 extension khác, hoặc số đã cũ — **đừng cài theo tên chung, phải xác định đúng extension ID / repo trước khi dùng, và chỉ thử trên profile phụ / tài khoản không quan trọng**, như chính video cũng khuyên.
+- Liên quan Toản: cặp "mắt + tay" này khớp với hướng Toản đang đi (agent dùng trình duyệt thật đã login, như Browsentic đã lưu ở bài 2, và StykAnimate MCP ở bài 7) — nhưng Agent-Reach chỉ đọc, Browser MCP mới là phần điều khiển, và phần điều khiển là phần rủi ro nhất với tài khoản chính.
+
+## 10. Anatomy — skill Claude Code vẽ "máy giải thích khái niệm" bằng hình isometric tương tác (video 13/10/2026, Kén kiến thức)
+- Video gốc: https://www.facebook.com/reel/1174660021665548/ — Kén kiến thức, đăng 13/10/2026, 946 like / 3 comment lúc đọc.
+- Repo: https://github.com/wheresryan22/anatomy — MIT, tạo 08/10/2026 (rất mới), **21.981 sao / 1.788 fork lúc kiểm chứng** (video ngày 13/10 nói 7.622 sao — tăng gần 3 lần trong ~2 tuần, đúng kiểu repo đang viral, chưa phải project lâu đời đã chứng minh độ bền).
+- Là gì: agent skill cho Claude Code (cũng chạy Antigravity, OpenCode, Codex, MiniMax Code) — hỏi 1 khái niệm kỹ thuật, nó không vẽ flowchart chung chung mà "phát minh" 1 vật thể vật lý mà cách hoạt động của vật đó chính là khái niệm. Ví dụ trong video: cache = ổ khóa pin-tumbler, chỉ khi mọi pin khớp ở đường cắt thì mới tái dùng kết quả cũ, lệch pin là tính lại; ví dụ flagship trong repo: động cơ Raptor 2 trên giá thử, tách ra 11 cụm, zoom tới từng mối hàn, plume lửa bằng WebGL shader.
+- Output: SVG isometric nhiều chi tiết nhỏ, shading 4 tone, trong card có tiêu đề + hint + live readout, tương tác bằng chuột/bàn phím; dạng standalone HTML, file .svg độc lập, hoặc component React/Next.js; có thêm lớp WebGL cho lửa/nước/ánh sáng, và mode 3D beta (quay thật, tay robot...).
+- Cài: `npx skills add wheresryan22/anatomy -g -a claude-code` (vào `~/.claude/skills/anatomy`), dùng: `/anatomy explain how a token bucket rate limiter works, interactive` (Codex thì `$anatomy`). Không cần API key, không cần npm install thêm (kit chỉ dùng module built-in của Node), cần Node 20.10+ và Chrome/Chromium để chạy các bước kiểm tra hình.
+- Giới hạn theo README (quan trọng, khác với video): **không phải thư viện chart** (không trục, không series, không plot); **chỉ vẽ máy móc, dụng cụ, đồ nội thất — không vẽ người, không vẽ bản đồ chính xác**; ý tưởng nào không có cơ chế để dựng thành vật thể thì hình sẽ yếu. **Chậm một cách có chủ đích**: Raptor build mất vài phút, audit quỹ đạo 3D mất 15–20 phút cho 30 chi tiết — **con số "ảnh nhỏ tới 1 giờ, ảnh lớn 2–4 giờ" trong video không thấy trong README Limits, đừng coi là số chính thức**; có thể video tính cả session agent dài, không phải chỉ build.
+- Liên quan Toản: hợp với Toản nhất ở mảng giải thích kỹ thuật cho cộng đồng / Toan Nguyen In Oz và cho các app TV (ví dụ vẽ cách hoạt động của 1 hệ thống), và hợp workflow Claude Code skill mà Toản đang sưu tầm; không hợp để vẽ người, vẽ storyboard Qokka, hay vẽ biểu đồ — đừng dùng sai mục đích.
+
+## 11. Impeccable — "từ vựng thiết kế" chống AI slop cho coding agent (video 27/10/2026, Code Xong Đi Ngủ)
+- Video gốc: https://www.facebook.com/reel/1405612041562587/ — Code Xong Đi Ngủ (@coder1910), đăng 27/10/2026, 799 like / 2 comment lúc đọc.
+- Repo: https://github.com/pbakaus/impeccable — Apache-2.0, tạo 16/11/2025, **92.304 sao / 5.452 fork / 2.590 commit / 93 release lúc kiểm chứng** (video nói 90.200+ sao — khớp, nay đã cao hơn; đây là project trưởng thành, không phải repo mới nổi 1–2 tuần như Anatomy).
+- Vấn đề nó giải quyết: AI nào cũng lặp lại cùng 1 template SaaS — font Inter cho mọi thứ, gradient tím–xanh, card lồng card, icon bo tròn trên mỗi heading, chữ xám trên nền màu. Impeccable bắt đầu từ skill frontend-design của Anthropic rồi mở rộng.
+- Gồm: 1 skill + **24 lệnh** + **62 rule detector xác định (deterministic, không cần LLM/API key)**. Lệnh dùng chung 1 từ vựng với AI: `/impeccable init` (ghi PRODUCT.md: audience, purpose, context, constraints, voice, evidence — tách riêng sự thật sản phẩm với hướng visual), rồi `audit` (kiểm tra kỹ thuật: a11y, performance, responsive), `critique` (review UX), `polish` (chốt trước khi ship), `bolder` (làm đậm lên), `quieter` (giảm bớt), `distill` (gọt về cốt lõi), `craft/shape/extract/document/harden/animate/colorize/typeset/layout/delight/overdrive/clarify/adapt/optimize/live/generate...`; có thể `pin` lệnh thành shortcut riêng (vd `/audit`).
+- Chạy: `npx impeccable install` (từ root project, chọn tool + scope project/global), rồi `/impeccable init` trong tool. Hỗ trợ 18+ tool: Claude Code, Cursor, Copilot, Codex, Gemini CLI, OpenCode, Antigravity, Grok Build, Hermes, Devin... Hook design: khi lưu file UI, hook chạy detector rồi đưa finding vào luồng agent (Claude/Copilot/Codex/Cursor/Grok). `npx impeccable detect src/` chạy local, không cần API key, bắt 62 lỗi: gradient tím, bounce easing, dark glow, side-tab border, line quá dài, padding chật, touch target nhỏ, skip heading... Live Mode: thử biến thể visual trực tiếp trong trình duyệt cho project local (không dùng cho site production đã deploy).
+- **SỬA 1 CLAIM TRONG VIDEO — telemetry:** video nói "telemetry off by default". README nói ngược lại: khi bắt đầu design mới, skill luôn gọi roll API ở impeccable.style để chia "hand" các hướng visual (đó là tính năng nên luôn xảy ra); **trừ khi opt-out, nó còn gửi kèm record ẩn danh về hand nào đã hiện và card nào thắng**, để catalog học cái nào hiệu quả. **Không bao giờ gửi: tên project, file, code, PRODUCT.md, tên các hướng do agent viết.** Tắt bằng `npx impeccable telemetry off`, hoặc `DO_NOT_TRACK=1` / `IMPECCABLE_NO_TELEMETRY=1`, hoặc `"telemetry": false` trong `.impeccable/config.json`; tắt rồi roll vẫn chạy, API chỉ được báo là đừng record. Tóm lại: không gửi code, nhưng không phải "off by default" — ai quan tâm privacy thì tắt ngay sau khi cài.
+- Liên quan Toản: đây là skill thiết kế, bổ sung trực tiếp cho bài 5 GoodAIList (hallmark chống AI slop) và cho workflow Claude Code của Toản — đặc biệt hợp khi Toản làm web/artifact, landing page, hoặc UI cho app; không liên quan trực tiếp tới video Qokka (người que) hay TV app Android. Lưu ý hook: README cảnh báo hook Claude Code chạy độc lập với model-tool approval, lần edit đầu có thể tải engine về cache ngay cả khi session từ chối lệnh launcher — xem lại hook đã cài trước khi chạy unattended.
+
+---
+
+## Cách thêm bài mới
+- Mỗi bài mới thêm 1 mục `## N. Tên bài — nguồn (ngày)` ở cuối file, theo mẫu các mục trên: link gốc, tóm tắt đã kiểm chứng, số sao/fork + thời điểm kiểm chứng, caveat (số tự báo cáo / chưa xác minh / rủi ro), và dòng "Liên quan Toản".
+- Không cài/thử ngay khi chỉ lưu — chỉ lưu khi Toản nói thử thì mới thử.
+- File này là bản chính từ 29/10/2026; file cũ `workspace/bai-hay-luu-lai.md` giữ lại làm bản sao lưu.
